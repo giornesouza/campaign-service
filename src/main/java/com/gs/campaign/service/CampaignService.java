@@ -22,23 +22,22 @@ public class CampaignService {
     }
     
     public Optional<CampaignDTO> findOne(Long id) {
-	Optional<Campaign> campaign = campaignRepository.findOne(id);
-	return campaign.isPresent() ? Optional.of(new CampaignDTO(campaign.get())) : Optional.empty(); 
+	return campaignRepository.findByIdAndEndDateGreaterThanEqual(id, LocalDate.now())
+		.flatMap(campaign -> Optional.of(new CampaignDTO(campaign)));
     }
     
     public List<CampaignDTO> findAll() {
-	return CampaignMapper.campaignsToCampaignDTOs(campaignRepository.findAll(LocalDate.now()));
+	return CampaignMapper.campaignsToCampaignDTOs(campaignRepository.findByEndDateGreaterThanEqual(LocalDate.now()));
     }
     
     public CampaignDTO save(CampaignDTO campaignDTO) {
 	Campaign savedCampaign = campaignRepository.save(CampaignMapper.campaignDTOToCampaign(campaignDTO));
-	campaignDTO.setId(savedCampaign.getId());
-	return campaignDTO;
+	return new CampaignDTO(savedCampaign);
     }
     
     public CampaignDTO update(CampaignDTO campaignDTO) {
 	Campaign updatedCampaign = campaignRepository.save(CampaignMapper.campaignDTOToCampaign(campaignDTO));
-	return CampaignMapper.campaignToCampaignDTO(updatedCampaign);
+	return new CampaignDTO(updatedCampaign);
     }
     
     public void delete(Long id) {
