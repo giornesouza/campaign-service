@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "campaigns")
@@ -41,7 +43,7 @@ public class Campaign {
 	this.startDate = startDate;
 	this.endDate = endDate;
     }
-
+    
     public Long getId() {
 	return id;
     }

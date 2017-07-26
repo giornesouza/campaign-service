@@ -3,11 +3,13 @@ package com.gs.campaign.service.dto;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gs.campaign.domain.Campaign;
 
 
 public class CampaignDTO {
-
+    
+    @JsonIgnore
     private Long id;
 
     private String name;

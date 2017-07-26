@@ -1,5 +1,6 @@
 package com.gs.campaign.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +22,12 @@ public class CampaignService {
     }
     
     public Optional<CampaignDTO> findOne(Long id) {
-	return Optional.of(new CampaignDTO(campaignRepository.findOne(id).get()));
+	Optional<Campaign> campaign = campaignRepository.findOne(id);
+	return campaign.isPresent() ? Optional.of(new CampaignDTO(campaign.get())) : Optional.empty(); 
     }
     
     public List<CampaignDTO> findAll() {
-	return CampaignMapper.campaignsToCampaignDTOs(campaignRepository.findAll());
+	return CampaignMapper.campaignsToCampaignDTOs(campaignRepository.findAll(LocalDate.now()));
     }
     
     public CampaignDTO save(CampaignDTO campaignDTO) {
