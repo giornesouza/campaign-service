@@ -43,7 +43,7 @@ public class CampaignResource {
 	    throw new UnexpectedParamException(ResourceMessageConstant.UNEXPECTED_ID_PARAM);
 	} 	
 	CampaignDTO savedCampaign = campaignService.save(campaignDTO);	
-	URI location = new URI(request.getRequestURL() + "/" + savedCampaign.getId());
+	URI location = new URI(request.getRequestURL().append(savedCampaign.getId()).toString());
 	return ResponseEntity.created(location).body(savedCampaign);
 	
     }
@@ -59,7 +59,12 @@ public class CampaignResource {
 
     @GetMapping
     public ResponseEntity<List<CampaignDTO>> getAllCampaigns() {
-	return ResponseEntity.ok().body(campaignService.findAll());
+	return ResponseEntity.ok(campaignService.findAll());
+    }
+    
+    @GetMapping(path = "/team/{heartTeam}") 
+    public ResponseEntity<List<CampaignDTO>> getAllCampaignsByHeartTeam(@PathVariable String heartTeam) {
+	return ResponseEntity.ok(campaignService.findByHeartTeam(heartTeam));
     }
     
     @PutMapping

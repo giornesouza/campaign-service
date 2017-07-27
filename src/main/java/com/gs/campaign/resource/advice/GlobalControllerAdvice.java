@@ -30,7 +30,7 @@ public class GlobalControllerAdvice {
 	    RequiredParamException.class, HttpRequestMethodNotSupportedException.class,
 	    ConstraintViolationException.class, IllegalArgumentException.class, UnexpectedParamException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiErrorResponse badRequest(ConstraintViolationException ex) {
+    public ApiErrorResponse badRequest(Exception ex) {
 	return new ApiErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }
 

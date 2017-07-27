@@ -47,10 +47,9 @@ public class CampaignService {
 	campaignRepository.delete(id);
     }
 
-    public List<Campaign> findByEndDateBetween(LocalDate startDate, LocalDate endDate) {
-	return campaignRepository.findByEndDateBetween(startDate, endDate);
+    public List<CampaignDTO> findByHeartTeam(String heartTeam) {
+	return CampaignMapper.campaignsToCampaignDTOs(
+		campaignRepository.findByHeartTeamAndEndDateGreaterThanEqual(heartTeam, LocalDate.now()));
     }
-
-    
 
 }

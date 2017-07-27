@@ -14,6 +14,6 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long> {
     
     List<Campaign> findByEndDateGreaterThanEqual(LocalDate today);
     
-    List<Campaign> findByEndDateBetween(LocalDate startDate, LocalDate endDate);
+    List<Campaign> findByHeartTeamAndEndDateGreaterThanEqual(String heartTeam, LocalDate date);
 
 }
