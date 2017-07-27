@@ -91,7 +91,7 @@ public class Campaign {
     }
     
     public void addDays(int days) {
-	this.endDate.plusDays(days);
+	this.endDate = this.endDate.plusDays(days);
     }
 
     @Override
@@ -117,6 +117,12 @@ public class Campaign {
 	} else if (!id.equals(other.id))
 	    return false;
 	return true;
+    }
+
+    @Override
+    public String toString() {
+	return "Campaign [id=" + id + ", name=" + name + ", heartTeam=" + heartTeam + ", startDate=" + startDate
+		+ ", endDate=" + endDate + "]";
     }
 
 }

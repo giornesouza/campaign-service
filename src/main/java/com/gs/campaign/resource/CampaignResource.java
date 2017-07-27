@@ -1,14 +1,14 @@
 package com.gs.campaign.resource;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gs.campaign.exception.RequiredParamException;
+import com.gs.campaign.exception.UnexpectedParamException;
+import com.gs.campaign.resource.constants.ResourceMessageConstant;
 import com.gs.campaign.service.CampaignService;
 import com.gs.campaign.service.dto.CampaignDTO;
 
@@ -34,23 +37,22 @@ public class CampaignResource {
     }
 
     @PostMapping
-    public ResponseEntity<CampaignDTO> createCampaign(@RequestBody CampaignDTO campaignDTO, HttpServletRequest request) {
+    public ResponseEntity<CampaignDTO> createCampaign(@Valid @RequestBody CampaignDTO campaignDTO,
+	    HttpServletRequest request) throws URISyntaxException {
 	if (campaignDTO.getId() != null) {
-	    throw new ConstraintViolationException("A new Campaign cannot already have an ID", null);
-	} 
-	
-	CampaignDTO savedCampaign = campaignService.save(campaignDTO);
-	HttpHeaders header = new HttpHeaders();
-	header.set("Location", request.getRequestURL() + "/" + savedCampaign.getId());
-	return ResponseEntity.status(HttpStatus.CREATED).headers(header).body(savedCampaign);
+	    throw new UnexpectedParamException(ResourceMessageConstant.UNEXPECTED_ID_PARAM);
+	} 	
+	CampaignDTO savedCampaign = campaignService.save(campaignDTO);	
+	URI location = new URI(request.getRequestURL() + "/" + savedCampaign.getId());
+	return ResponseEntity.created(location).body(savedCampaign);
 	
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/{id:[0-9]+}")
     public ResponseEntity<CampaignDTO> getCampaign(@PathVariable Long id) {
 	Optional<CampaignDTO> campaignDTO = campaignService.findOne(id);
 	if (!campaignDTO.isPresent()) {
-	    throw new EntityNotFoundException("The requested resource was not found on this server");
+	    throw new EntityNotFoundException(ResourceMessageConstant.ENTITY_NOT_FOUND);
 	}
 	return ResponseEntity.ok(campaignDTO.get());
     }
@@ -61,23 +63,23 @@ public class CampaignResource {
     }
     
     @PutMapping
-    public ResponseEntity<CampaignDTO> updateCampaign(@RequestBody CampaignDTO campaignDTO) {
+    public ResponseEntity<CampaignDTO> updateCampaign(@Valid @RequestBody CampaignDTO campaignDTO) {
 	if (campaignDTO.getId() == null) {
-	   throw new NullPointerException("The resource's ID must to be given"); 
+	   throw new RequiredParamException(ResourceMessageConstant.REQUIRED_ID_PARAM); 
 	}
 	Optional<CampaignDTO> existingCampaign = campaignService.findOne(campaignDTO.getId());
 	if (!existingCampaign.isPresent()) {
-	    throw new EntityNotFoundException("The requested resource was not found on this server");
+	    throw new EntityNotFoundException(ResourceMessageConstant.ENTITY_NOT_FOUND);
 	}
 	return ResponseEntity.ok(campaignService.update(campaignDTO));
 	
     }
     
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "/{id:[0-9]+}")
     public ResponseEntity<Void> deleteCampaign(@PathVariable Long id) {
 	Optional<CampaignDTO> campaignDTO = campaignService.findOne(id);
 	if (!campaignDTO.isPresent()) {
-	    throw new EntityNotFoundException("The requested resource was not found on this server");
+	    throw new EntityNotFoundException(ResourceMessageConstant.ENTITY_NOT_FOUND);
 	}
 	campaignService.delete(id);
 	return ResponseEntity.ok().build();

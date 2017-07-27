@@ -13,34 +13,37 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import com.gs.campaign.exception.RequiredParamException;
+import com.gs.campaign.exception.UnexpectedParamException;
 import com.gs.campaign.resource.response.ApiErrorResponse;
 
 @RestControllerAdvice
 public class GlobalControllerAdvice {
-    
+
     @ExceptionHandler(value = { Exception.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiErrorResponse internalServerError(Exception ex, WebRequest req) {
-        return new ApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+	return new ApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
     }
-    
-    @ExceptionHandler(value = { HttpMessageNotReadableException.class, MethodArgumentNotValidException.class, NullPointerException.class, 
-	      HttpRequestMethodNotSupportedException.class, ConstraintViolationException.class, IllegalArgumentException.class })
+
+    @ExceptionHandler(value = { HttpMessageNotReadableException.class, MethodArgumentNotValidException.class,
+	    RequiredParamException.class, HttpRequestMethodNotSupportedException.class,
+	    ConstraintViolationException.class, IllegalArgumentException.class, UnexpectedParamException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse badRequest(ConstraintViolationException ex) {
 	return new ApiErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }
-    
+
     @ExceptionHandler(value = { NoHandlerFoundException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiErrorResponse noHandlerFound(Exception ex, WebRequest req) {
-        return new ApiErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+	return new ApiErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
     }
-    
+
     @ExceptionHandler(value = { EntityNotFoundException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiErrorResponse entityNotFound(Exception ex) {
-        return new ApiErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+	return new ApiErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
     }
-    
+
 }

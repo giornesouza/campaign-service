@@ -2,6 +2,10 @@ package com.gs.campaign.service.dto;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gs.campaign.domain.Campaign;
 
@@ -9,14 +13,20 @@ import com.gs.campaign.domain.Campaign;
 public class CampaignDTO {
     
     private Long id;
-
+    
+    @NotNull
+    @NotBlank
     private String name;
-
+    
+    @NotNull
+    @NotBlank
     private String heartTeam;
     
+    @NotNull
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate startDate;
     
+    @NotNull
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate endDate;
     
