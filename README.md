@@ -1,9 +1,11 @@
 # campaign-service
 
-##### Frameworks utilizados:
-> Springboot (data-jpa, Repository, web) 
-> Java8
-> Swagger-ui
-> maven
+## O que foi utilizado
+* Java 8 
+* Spring Boot
+* Maven
+* JUnit
+* Swagger-ui
+* H2 Database
 
-* Documentação da api disponível em http://localhost:8090/swagger-ui.html#/campaign-resource
+* Documentação da api disponível em: http://localhost:8090/swagger-ui.html#/campaign-resource
